@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1",
+    "name": "四種混合",
+    "description": "ジフテリア・百日せき・破傷風・ポリオ混合",
+    "min_age": 0,
+    "min_month": 3,
+    "max_age": 1,
+    "max_month": 0
+  },
+  {
+    "id": "2",
+    "name": "ポリオ",
+    "description": "",
+    "min_age": 0,
+    "min_month": 3,
+    "max_age": 7,
+    "max_month": 6
+  },
+  {
+    "id": "3",
+    "name": "二種混合",
+    "description": "ジフテリア・破傷風混合",
+    "min_age": 11,
+    "min_month": 0,
+    "max_age": 12,
+    "max_month": 0
+  },
+  {
+    "id": "4",
+    "name": "MR第1期",
+    "description": "麻しん・風しん混合",
+    "min_age": 1,
+    "min_month": 0,
+    "max_age": 2,
+    "max_month": 0
+  },
+  {
+    "id": "5",
+    "name": "MR第2期",
+    "description": "麻しん・風しん混合",
+    "min_age": 5,
+    "min_month": 0,
+    "max_age": 6,
+    "max_month": 0
+  },
+  {
+    "id": "6",
+    "name": "ヒブ",
+    "description": "",
+    "min_age": 0,
+    "min_month": 2,
+    "max_age": 0,
+    "max_month": 7
+  },
+  {
+    "id": "7",
+    "name": "小児用肺炎球菌",
+    "description": "",
+    "min_age": 0,
+    "min_month": 2,
+    "max_age": 0,
+    "max_month": 7
+  },
+  {
+    "id": "8",
+    "name": "子宮頸がん予防",
+    "description": "",
+    "min_age": 13,
+    "min_month": 0,
+    "max_age": 14,
+    "max_month": 0
+  },
+  {
+    "id": "9",
+    "name": "水痘",
+    "description": "水ぼうそう",
+    "min_age": 1,
+    "min_month": 0,
+    "max_age": 1,
+    "max_month": 3
+  },
+  {
+    "id": "10",
+    "name": "日本脳炎",
+    "description": "15歳未満",
+    "min_age": 3,
+    "min_month": 0,
+    "max_age": 4,
+    "max_month": 0
+  },
+  {
+    "id": "11",
+    "name": "日本脳炎",
+    "description": "15歳以上",
+    "min_age": 15,
+    "min_month": 0,
+    "max_age": 150,
+    "max_month": 0
+  },
+  {
+    "id": "12",
+    "name": "B型肝炎",
+    "description": "",
+    "min_age": 0,
+    "min_month": 2,
+    "max_age": 0,
+    "max_month": 3
+  }
+]
