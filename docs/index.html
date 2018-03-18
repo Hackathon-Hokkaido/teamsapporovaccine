@@ -166,7 +166,7 @@ function getNearestMarkers( targets, count, currentLocation ) {
 $('#getnear').click(function(){
 	ll = $("#seljr").val();
 	latlon = ll.split(',');
-	near = getNearestMarkers( springs, 0,  L.latLng(latlon[1], latlon[0]) );
+	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
   makeGrid(near);
 	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
 });
@@ -174,7 +174,7 @@ $('#getnear').click(function(){
 $('#getnear2').click(function(){
 	ll = $("#selun").val();
 	latlon = ll.split(',');
-	near = getNearestMarkers( springs, 0,  L.latLng(latlon[1], latlon[0]) );
+	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
   makeGrid(near);
 	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
 });
@@ -183,7 +183,7 @@ $('#curnear').click(function(){
 	if(navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition( 
 		function(cp){ // success
-			near = getNearestMarkers( springs, 0, L.latLng(cp.coords.latitude, cp.coords.longitude) );
+			near = getNearestMarkers( hospitals, 0, L.latLng(cp.coords.latitude, cp.coords.longitude) );
 			makeGrid(near);
 			setCurrentPosition(L.latLng(cp.coords.latitude, cp.coords.longitude));
 	  }, 
