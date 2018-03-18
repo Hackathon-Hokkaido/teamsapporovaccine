@@ -23,42 +23,26 @@
     <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
     <script src="SlickGrid-master/slick.core.js"></script>
     <script src="SlickGrid-master/slick.grid.js"></script>
-
-    <style>
-        body {
-            padding: 0;
-            margin: 0
-        }
-        
-        html,
-        body,
-        #map {
-            height: 80%;
-            width: 100%;
-        }
-    </style>
-
 </head>
 
 <body bgcolor="#ffffec">
+    <h1><i class="material-icons">local_hospital</i>札幌市 ワクチン接種実施医療機関地図</h1>
     <header>
-        <h1> 札幌市 ワクチン接種実施医療機関地図</h1>
+        <i class="material-icons" style="left: calc(25%)">train</i>
         <section>
-            <i class="material-icons">train</i>
             <select id="seljr"></select>
             <button id="getnear">JR駅の近くでリスト表示</button>
         </section>
+        <i class="material-icons" style="left: calc(50%)">subway</i>
         <section>
-            <i class="material-icons">subway</i>
             <select id="selun"></select>
-            <button id="getnear2">地下鉄駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
+            <button id="getnear2">地下鉄駅の近くでリスト表示</button><br/>
         </section>
-        <h5> 現在地の場合はこちら</h5>
-        <button id="curnear">現在地の近くでリスト表示</button><br/><br/>
+        <i class="material-icons" style="left: calc(75%)">person_pin_circle</i>
+        <section>
+            <button id="curnear">現在地の近くでリスト表示</button><br/><br/>
+        </section>
 
-        <h2>ワクチンを接種できる医療機関リスト</h2>
-        <h4>↓↓↓リスト上をクリックすると該当施設がわかり、アイコンをクリックすると詳しい情報を見ることができます。↓↓↓</h4>
-        <div id="list" style="width:100%;height:200px;"></div>
     </header>
     <div id="map"></div>
 
