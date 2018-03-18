@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="">
+<title>札幌市ワクチン摂取情報サイト</title>
+
+<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-1.3.1/leaflet.css" />-->
+<link rel="stylesheet" href="leaflet/leaflet.css" />
+<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css"/>
+<link rel="stylesheet" href="SlickGrid-master/slick.grid.css"/>
+<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+<script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<script src="jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
+<script src="jquery.event.drop-2.2/jquery.event.drop-2.2.js"></script>
+<!--<script src="http://cdn.leafletjs.com/leaflet-1.3.1/leaflet.js"></script>-->
+<script src="leaflet/leaflet.js"></script>
+<script src='http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="SlickGrid-master/slick.core.js"></script>
+<script src="SlickGrid-master/slick.grid.js"></script>
+
+<style>
+  body {padding: 0; margin: 0}
+  html, body, #map {height: 80%; width: 100%;}
+</style>
+
+</head>
+<body bgcolor="#ffffec">
+<h1> 札幌市ワクチン接種うんたら</h1>
+<h5> JRの最寄り駅検索の場合はこちら</h5>
+<select id="seljr"></select>
+<button id="getnear">JR駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
+<h5> 地下鉄の最寄り駅検索の場合はこちら</h5>
+<select id="selun"></select>
+<button id="getnear2">地下鉄駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
+<h5> 現在地の場合はこちら</h5>
+<button id="curnear">現在地の近くでリスト表示</button><br/><br/>
+
+<h2>ワクチンを接種できる医療機関リスト</h2>
+<h4>↓↓↓リスト上をクリックすると該当施設がわかり、アイコンをクリックすると詳しい情報を見ることができます。↓↓↓</h4>
+<div id="list" style="width:100%;height:200px;"></div>
+<h2>ワクチン接種実施医療機関地図</h2>
+<div id="map"></div>
+
+<!-- SCRIPTS -->
+<script>
+var map = L.map('map');
+L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+  attribution: "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+}).addTo(map);
+var cmarker = L.marker([43.063882, 141.345534]).addTo(map);
+function setCurrentPosition(latlong) {
+	cmarker.setLatLng(latlong);
+	map.panTo(latlong);
+}
+var hospitalIcons = [];
+iconName = [ 'icons/hsp1.png' ];
+iconName.forEach(function (png) {
+	hospitalIcons.push(new L.Icon({
+    iconUrl: png,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, 0]
+	}))
+});
+var hospitals = [];
+var sapporoLayer = 
+omnivore.csv(
+  'data/sapporo_vaccine.csv',
+  {latfield: 'latitude', lonfield: 'longitude', delimiter: ','}
+).on('ready', function(layer) {
+  this.eachLayer(function(marker) {
+	  hospitals.push( marker.toGeoJSON() );
+	  marker.setIcon(hospitalIcons[0]);
+    // Bind a popup to each icon based on the same properties
+    gj = marker.toGeoJSON();
+    marker.bindPopup("<a href='#' target='_blank'>" + gj.properties.hsp_name + "</a><br />" + gj.properties.hsp_address 
+      + "<br />電話 : " + gj.properties.hsp_phone
+      + "<br />ワクチン名 : " + gj.properties.vac_name
+      + "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
+      + "<br />メモ : " + gj.properties.memo
+    );
+    });
+  })
+ .addTo(map);
+map.setView([43.063882, 141.345534], 13);
+
+/**
+	* 指定した位置から近い geoJSON オブジェクトを取得する
+	* @param targets  geoJSON オブジェクトの配列
+	* @param count 取得する個数
+	* @param currentLocation 指定位置 LatLon
+	* @return geoJSON オブジェクト配列 
+	*/
+function getNearestMarkers( targets, count, currentLocation ) {
+	result = [];
+	targets.forEach(function(marker){
+		result.push(marker);
+	});
+	result.sort(function(a,b){
+		bg = b.geometry;
+		bll = L.latLng( bg.coordinates[1], bg.coordinates[0] );
+		ag = a.geometry;
+		all = L.latLng( ag.coordinates[1], ag.coordinates[0] );
+		dist = bll.distanceTo(currentLocation) - all.distanceTo(currentLocation);
+		if( dist > 0 ) return -1;
+		else if( dist < 0 ) return 1;
+		return 0;
+	});
+	if( count > 0 ) 	return result.splice(0, count);
+  return result;
+}
+
+ var grid;
+ var columns = [
+    {id: "hsp_name", name: "医療施設名", field: "医療施設名", width: 300 },
+    {id: "hsp_address", name: "住所", field: "住所", width: 300 },
+    {id: "hsp_phone", name: "電話番号", field: "電話番号", width: 70 },
+    {id: "vac_name", name: "ワクチン名", field: "ワクチン名", width: 70 },
+    {id: "vac_minage", name: "年齢下限", field: "年齢下限", width: 70 },
+    {id: "vac_maxage", name: "年齢上限", field: "年齢上限", width: 70 },
+    {id: "memo", name: "メモ", field: "メモ", width: 70 }
+  ];
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: false,
+    selectedCellCssClass: "selected",
+    
+  };
+
+ var circleMarker = L.circleMarker([0,0],{
+     radius: 32,
+     color:"#00f",
+        weight:5,
+        opacity:0.4,
+        fill:true,
+        fillColor:"#f00",
+        fillOpacity:0.2
+ }).addTo(map);
+  
+ function makeGrid( geojsons ) {
+  var data = [];
+  geojsons.forEach(function(gj){
+    data.push({
+        "医療施設名": gj.properties.hsp_name,
+        "住所": gj.properties.hsp_address,
+        "電話番号": gj.properties.hsp_phone,
+        "ワクチン名": gj.properties.vac_name,
+        "年齢下限": gj.properties.vac_minage,
+        "年齢上限": gj.properties.vac_maxage,
+        "メモ": gj.properties.memo
+    });
+  });
+  grid = new Slick.Grid("#list", data, columns, options);
+  grid.onClick.subscribe(function(e){
+	  var cell = grid.getCellFromEvent(e);
+	  bg = geojsons[cell.row].geometry;
+	  map.panTo( L.latLng( bg.coordinates[1], bg.coordinates[0] ) );
+    circleMarker.setLatLng(L.latLng( bg.coordinates[1], bg.coordinates[0] ));
+  });
+ }
+
+$('#getnear').click(function(){
+	ll = $("#seljr").val();
+	latlon = ll.split(',');
+	near = getNearestMarkers( springs, 0,  L.latLng(latlon[1], latlon[0]) );
+  makeGrid(near);
+	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+});
+
+$('#getnear2').click(function(){
+	ll = $("#selun").val();
+	latlon = ll.split(',');
+	near = getNearestMarkers( springs, 0,  L.latLng(latlon[1], latlon[0]) );
+  makeGrid(near);
+	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+});
+
+$('#curnear').click(function(){
+	if(navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition( 
+		function(cp){ // success
+			near = getNearestMarkers( springs, 0, L.latLng(cp.coords.latitude, cp.coords.longitude) );
+			makeGrid(near);
+			setCurrentPosition(L.latLng(cp.coords.latitude, cp.coords.longitude));
+	  }, 
+	  function(error) { // error
+	    var errorMessage = {
+		    0: "原因不明のエラーが発生しました…。" ,
+		    1: "位置情報の取得が許可されませんでした…。" ,
+		    2: "電波状況などで位置情報が取得できませんでした…。" ,
+		    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました…。" ,
+	    } ;
+      // エラーコードに合わせたエラー内容をアラート表示
+	    alert( errorMessage[error.code] );
+	  });
+  }	else {
+	  alert('現在地を取得できない設定になっています');
+  }
+});
+
+(function() {
+ var JR = [
+ { 'JR 駅名（番号）':[141.350768,43.068612] },
+ { '星置（S09）':[141.210856,43.132375] },
+ { '稲穂（S08）':[141.222919,43.128115] },
+ { '手稲（S07）':[141.243785,43.120238] },
+ { '稲積公園（S06）':[141.257113,43.112023] },
+ { '発寒（S05）':[141.277273,43.099819] },
+ { '発寒中央（S04）':[141.294497,43.089271] },
+ { 'JR琴似（S03）':[141.307418,43.081599] },
+ { '桑園（S02）':[141.332036,43.070744] },
+ { '札幌（01）':[141.350768,43.068612] },
+ { '苗穂（H02）':[141.377522,43.068574] },
+ { '白石（H03）':[141.413612,43.054715] },
+ { '厚別（A04）':[141.46369,43.045154] },
+ { '森林公園（A05）':[141.481332,43.056456] },
+ { '大麻（A06）':[141.496925,43.072382] },
+ { '野幌（A07）':[141.52984,43.092559] },
+ ];
+ $.each(JR,function() {
+   for(var key in this) {
+	   $("#seljr").append($("<option>").val(this[key]).text(key));
+	 }
+ });
+ var railways = [
+{ '地下鉄駅名（番号）':[141.350299,43.06637] },
+{ '麻生（N01）':[141.338255,43.109106] },
+{ '北34条（N02）':[141.341936,43.099891] },
+{ '北24条（N03）':[141.344645,43.089942] },
+{ '北18条（N04）':[141.346692,43.081552] },
+{ '北12条（N05）':[141.348404,43.074825] },
+{ 'さっぽろ（N06, H07）':[141.350299,43.06637] },
+{ '大通（N07, T09, H08）':[141.354526,43.060479] },
+{ 'すすきの（N08）':[141.352749,43.055574] },
+{ '中島公園（N09）':[141.354913,43.048892] },
+{ '幌平橋（N10）':[141.355886,43.040073] },
+{ '中の島（N11）':[141.360758,43.037727] },
+{ '平岸（N12）':[141.368027,43.034569] },
+{ '南平岸（N13）':[141.371341,43.026794] },
+{ '澄川（N14）':[141.367311,43.01682] },
+{ '自衛隊前（N15）':[141.364823,43.006232] },
+{ '真駒内（N16）':[141.358433,42.991203] },
+{ '宮の沢（T01）':[141.27717,43.089962] },
+{ '発寒南（T02）':[141.289312,43.081732] },
+{ '地下鉄琴似（T03）':[141.30746,43.081522] },
+{ '二十四軒（T04）':[141.314093,43.070221] },
+{ '西28丁目（T05）':[141.314522,43.060345] },
+{ '円山公園（T06）':[141.318863,43.055582] },
+{ '西18丁目（T07）':[141.330204,43.057168] },
+{ '西11丁目（T08）':[141.341036,43.058557] },
+{ '大通（N07, T09, H08）':[141.354526,43.060479] },
+{ 'バスセンター前（T10）':[141.360473,43.061268] },
+{ '菊水（T11）':[141.372831,43.057211] },
+{ '東札幌（T12）':[141.384605,43.051645] },
+{ '白石（T13）':[141.413608,43.054654] },
+{ '南郷7丁目（T14）':[141.411759,43.040091] },
+{ '南郷13丁目（T15）':[141.422697,43.035783] },
+{ '南郷18丁目（T16）':[141.435196,43.030229] },
+{ '大谷地（T17）':[141.453081,43.0279] },
+{ 'ひばりが丘（T18）':[141.464638,43.032175] },
+{ '新さっぽろ（T19）':[141.47247,43.038788] },
+{ '栄町（H01）':[141.367142,43.112995] },
+{ '新道東（H02）':[141.369086,43.104663] },
+{ '元町（H03）':[141.371587,43.094387] },
+{ '環状通東（H04）':[141.374643,43.082166] },
+{ '東区役所前（H05）':[141.364769,43.078197] },
+{ '北13条東（H06）':[141.354848,43.076883] },
+{ 'さっぽろ（N06, H07）':[141.350299,43.06637] },
+{ '大通（N07, T09, H08）':[141.354526,43.060479] },
+{ '豊水すすきの（H09）':[141.356838,43.055008] },
+{ '学園前（H10）':[141.36909,43.047448] },
+{ '豊平公園（H11）':[141.376573,43.041929] },
+{ '美園（H12）':[141.385756,43.036338] },
+{ '月寒中央（H13）':[141.396263,43.030553] },
+{ '福住（H14）':[141.403105,43.021621] },
+ ];
+ $.each(railways,function() {
+   for(var key in this) {
+	   $("#selun").append($("<option>").val(this[key]).text(key));
+	 }
+ });
+}());
+
+//alert('hoge');
+//map.removeLayer(schoolLayer);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+hsp_id,hsp_name,hsp_address,hsp_phone,latitude,longitude,vac_name,vac_minage,vac_maxage,memo
+hsp1,北海ほげ病院,北海道札幌市中央区北11条西16丁目1-34,123456789,43.071529,141.32883,仕事したくない病,0.3,1.2,メモです
+hsp2,北海ふが病院,北海道札幌市中央区北3条西12丁目,22345678,43.063185,141.337473,やる気でない病,32,55,なんか
+
+
