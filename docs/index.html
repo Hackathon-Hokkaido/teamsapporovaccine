@@ -66,6 +66,10 @@ iconName.forEach(function (png) {
     popupAnchor: [0, 0]
 	}))
 });
+var vaccines;
+$.getJSON("data/vaccine.json", function(data){
+	vaccines = jQuery.parseJSON(data);
+});
 var hospitals = [];
 var sapporoLayer = 
 omnivore.csv(
