@@ -65,7 +65,7 @@ var vaccines;
 $.getJSON("data/vaccine.json", function(data){ vaccines = data; });
 $.numbersToVaccines = function(numbers) {
 	result = [];
-	numbers.split(':').each(function(number){
+	numbers.split(':').forEach(function(number){
 		result.push( vaccines[number-1].name );
 	});
 	return result.join(',');
