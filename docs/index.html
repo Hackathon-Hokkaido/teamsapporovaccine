@@ -30,14 +30,9 @@
 </head>
 <body bgcolor="#ffffec">
 <h1> 札幌市予防net</h1>
-<h5> JRの最寄り駅検索の場合はこちら</h5>
 <select id="seljr"></select>
-<button id="getnear">JR駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
-<h5> 地下鉄の最寄り駅検索の場合はこちら</h5>
 <select id="selun"></select>
-<button id="getnear2">地下鉄駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
-<h5> 現在地の場合はこちら</h5>
-<button id="curnear">現在地の近くでリスト表示</button><br/><br/>
+<button id="curnear">現在地から近い順に病院を並替</button><br/><br/>
 
 <h2>ワクチンを接種できる医療機関リスト</h2>
 <h4>↓↓↓リスト上をクリックすると該当施設がわかり、アイコンをクリックすると詳しい情報を見ることができます。↓↓↓</h4>
@@ -173,7 +168,6 @@ function getNearestMarkers( targets, count, currentLocation ) {
  }
 
 $('#seljr').change(function(){
-//$('#getnear').click(function(){
 	ll = $("#seljr").val();
 	latlon = ll.split(',');
 	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
@@ -183,14 +177,12 @@ $('#seljr').change(function(){
 });
 
 $('#selun').change(function(){
-//$('#getnear2').click(function(){
 	ll = $("#selun").val();
 	latlon = ll.split(',');
 	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
   makeGrid(near);
 	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
-	alert('hoge');
-	//$('#seljr').prop('selectedIndex', 0);
+	$('#seljr').prop('selectedIndex', 0);
 });
 
 $('#curnear').click(function(){
@@ -306,6 +298,8 @@ $('#curnear').click(function(){
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
  });
+ near = getNearestMarkers( hospitals, 0,  L.latLng(43.06637,141.350299) );
+ makeGrid(near);
 }());
 
 //alert('hoge');
