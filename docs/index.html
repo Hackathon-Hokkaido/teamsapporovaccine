@@ -191,7 +191,9 @@ $('#curnear').click(function(){
 	if(navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition( 
 		function(cp){ // success
-      $.orderByPos(cp.coords.latitude, cp.coords.longitude) );
+      $.orderByPos(cp.coords.latitude, cp.coords.longitude);
+    	$('#selun').prop('selectedIndex', 0);
+    	$('#seljr').prop('selectedIndex', 0);
 	  }, 
 	  function(error) { // error
 	    var errorMessage = {
