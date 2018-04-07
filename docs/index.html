@@ -179,7 +179,7 @@ $('#seljr').change(function(){
 	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
   makeGrid(near);
 	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
-	$('#selun').attr('selectedIndex', 0);
+	$('#selun').prop('selectedIndex', 0);
 });
 
 $('#selun').change(function(){
@@ -189,7 +189,8 @@ $('#selun').change(function(){
 	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
   makeGrid(near);
 	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
-	$('#seljr').attr('selectedIndex', 0);
+	alert('hoge');
+	//$('#seljr').prop('selectedIndex', 0);
 });
 
 $('#curnear').click(function(){
