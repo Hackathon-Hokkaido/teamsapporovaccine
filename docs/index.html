@@ -168,9 +168,10 @@ function getNearestMarkers( targets, count, currentLocation ) {
  }
 
 $.orderByPos = function(lat,lon) {
-	near = getNearestMarkers( hospitals, 0,  L.latLng(lat, lon) );
+	cpos = L.latLng(lat, lon);
+	near = getNearestMarkers( hospitals, 0,  cpos );
   makeGrid(near);
-	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+	setCurrentPosition(cpos);
 }
 
 $('#seljr').change(function(){
