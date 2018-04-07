@@ -67,7 +67,7 @@ $.numbersToVaccines = function(numbers) {
 	result = [];
 	numbers.split(':').forEach(function(number){
 		vac = vaccines.find((vaccine)=>{return (vaccine.id === number);});
-		result.push( vac.name );
+		if(vac) result.push( vac.name );
 	});
 	return result.join(',');
 }
