@@ -79,7 +79,10 @@ omnivore.csv(
 	  marker.setIcon(hospitalIcons[0]);
     // Bind a popup to each icon based on the same properties
     gj = marker.toGeoJSON();
-    marker.bindPopup("<a href='#' target='_blank'>" + gj.properties.Name + "</a><br />" + gj.properties.address 
+    marker.bindPopup(
+      //"<a href='#' target='_blank'>" + gj.properties.Name + "</a>"
+      "病院名 : " + gj.properties.Name
+      + "<br />住所 : " + gj.properties.address 
       + "<br />電話 : " + gj.properties.phone
       + "<br />ワクチン名 : " + gj.properties.vaccine
       //+ "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
