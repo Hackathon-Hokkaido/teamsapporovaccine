@@ -120,6 +120,7 @@ function getNearestMarkers( targets, count, currentLocation ) {
  var columns = [
     {id: "Name", name: "医療施設名", field: "医療施設名", width: 300 },
     {id: "address", name: "住所", field: "住所", width: 300 },
+    {id: "address2", name: "建物", field: "建物", width: 300 },
     {id: "phone", name: "電話番号", field: "電話番号", width: 70 },
     {id: "vaccine", name: "ワクチン名", field: "ワクチン名", width: 70 },
     //{id: "vac_minage", name: "年齢下限", field: "年齢下限", width: 70 },
@@ -147,13 +148,14 @@ function getNearestMarkers( targets, count, currentLocation ) {
   var data = [];
   geojsons.forEach(function(gj){
     data.push({
-        "医療施設名": gj.properties.hsp_name,
-        "住所": gj.properties.hsp_address,
-        "電話番号": gj.properties.hsp_phone,
-        "ワクチン名": gj.properties.vac_name,
-        "年齢下限": gj.properties.vac_minage,
-        "年齢上限": gj.properties.vac_maxage,
-        "メモ": gj.properties.memo
+        "医療施設名": gj.properties.Name,
+        "住所": gj.properties.address,
+        "建物": gj.properties.address2,
+        "電話番号": gj.properties.phone,
+        "ワクチン": gj.properties.vaccine,
+        //"年齢下限": gj.properties.vac_minage,
+        //"年齢上限": gj.properties.vac_maxage,
+        //"メモ": gj.properties.memo
     });
   });
   grid = new Slick.Grid("#list", data, columns, options);
