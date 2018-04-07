@@ -167,21 +167,23 @@ function getNearestMarkers( targets, count, currentLocation ) {
   });
  }
 
+$.orderByPos(lat,lon) {
+	near = getNearestMarkers( hospitals, 0,  L.latLng(lat, lon) );
+  makeGrid(near);
+	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+}
+
 $('#seljr').change(function(){
 	ll = $("#seljr").val();
 	latlon = ll.split(',');
-	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
-  makeGrid(near);
-	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+	$.orderByPos(latlon[1], latlon[0]);
 	$('#selun').prop('selectedIndex', 0);
 });
 
 $('#selun').change(function(){
 	ll = $("#selun").val();
 	latlon = ll.split(',');
-	near = getNearestMarkers( hospitals, 0,  L.latLng(latlon[1], latlon[0]) );
-  makeGrid(near);
-	setCurrentPosition(L.latLng(latlon[1], latlon[0]));
+	$.orderByPos(latlon[1], latlon[0]);
 	$('#seljr').prop('selectedIndex', 0);
 });
 
@@ -189,9 +191,7 @@ $('#curnear').click(function(){
 	if(navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition( 
 		function(cp){ // success
-			near = getNearestMarkers( hospitals, 0, L.latLng(cp.coords.latitude, cp.coords.longitude) );
-			makeGrid(near);
-			setCurrentPosition(L.latLng(cp.coords.latitude, cp.coords.longitude));
+      $.orderByPos(cp.coords.latitude, cp.coords.longitude) );
 	  }, 
 	  function(error) { // error
 	    var errorMessage = {
@@ -298,8 +298,6 @@ $('#curnear').click(function(){
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
  });
- near = getNearestMarkers( hospitals, 0,  L.latLng(43.06637,141.350299) );
- makeGrid(near);
 }());
 
 //alert('hoge');
