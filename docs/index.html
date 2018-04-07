@@ -33,7 +33,7 @@
 <select id="seljr"></select>
 <select id="selun"></select>
 <button id="curnear">現在地から近い順に病院を並替</button><br/><br/>
-
+<div id="vacchks"></div>
 <h2>ワクチンを接種できる医療機関リスト</h2>
 <h4>↓↓↓リスト上をクリックすると該当施設がわかり、アイコンをクリックすると詳しい情報を見ることができます。↓↓↓</h4>
 <div id="list" style="width:100%;height:200px;"></div>
@@ -88,7 +88,7 @@ omnivore.csv(
       "病院名 : " + gj.properties.Name
       + "<br />住所 : " + gj.properties.address 
       + "<br />電話 : " + gj.properties.phone
-      + "<br />ワクチン名 : " + gj.properties.vaccine
+      + "<br />ワクチン名 : " + $.numbersToVaccines(gj.properties.vaccine)
       //+ "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
       //+ "<br />メモ : " + gj.properties.memo
     );
