@@ -71,19 +71,19 @@ $.getJSON("data/vaccine.json", function(data){ vaccines = data; });
 var hospitals = [];
 var sapporoLayer = 
 omnivore.csv(
-  'data/sapporo_vaccine.csv',
-  {latfield: 'latitude', lonfield: 'longitude', delimiter: ','}
+  'data/hospitals.csv',
+  {latfield: 'Y', lonfield: 'X', delimiter: ','}
 ).on('ready', function(layer) {
   this.eachLayer(function(marker) {
 	  hospitals.push( marker.toGeoJSON() );
 	  marker.setIcon(hospitalIcons[0]);
     // Bind a popup to each icon based on the same properties
     gj = marker.toGeoJSON();
-    marker.bindPopup("<a href='#' target='_blank'>" + gj.properties.hsp_name + "</a><br />" + gj.properties.hsp_address 
-      + "<br />電話 : " + gj.properties.hsp_phone
-      + "<br />ワクチン名 : " + gj.properties.vac_name
-      + "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
-      + "<br />メモ : " + gj.properties.memo
+    marker.bindPopup("<a href='#' target='_blank'>" + gj.properties.Name + "</a><br />" + gj.properties.address 
+      + "<br />電話 : " + gj.properties.phone
+      + "<br />ワクチン名 : " + gj.properties.vaccine
+      //+ "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
+      //+ "<br />メモ : " + gj.properties.memo
     );
     });
   })
@@ -118,13 +118,13 @@ function getNearestMarkers( targets, count, currentLocation ) {
 
  var grid;
  var columns = [
-    {id: "hsp_name", name: "医療施設名", field: "医療施設名", width: 300 },
-    {id: "hsp_address", name: "住所", field: "住所", width: 300 },
-    {id: "hsp_phone", name: "電話番号", field: "電話番号", width: 70 },
-    {id: "vac_name", name: "ワクチン名", field: "ワクチン名", width: 70 },
-    {id: "vac_minage", name: "年齢下限", field: "年齢下限", width: 70 },
-    {id: "vac_maxage", name: "年齢上限", field: "年齢上限", width: 70 },
-    {id: "memo", name: "メモ", field: "メモ", width: 70 }
+    {id: "Name", name: "医療施設名", field: "医療施設名", width: 300 },
+    {id: "address", name: "住所", field: "住所", width: 300 },
+    {id: "phone", name: "電話番号", field: "電話番号", width: 70 },
+    {id: "vaccine", name: "ワクチン名", field: "ワクチン名", width: 70 },
+    //{id: "vac_minage", name: "年齢下限", field: "年齢下限", width: 70 },
+    //{id: "vac_maxage", name: "年齢上限", field: "年齢上限", width: 70 },
+    //{id: "memo", name: "メモ", field: "メモ", width: 70 }
   ];
   var options = {
     enableCellNavigation: true,
