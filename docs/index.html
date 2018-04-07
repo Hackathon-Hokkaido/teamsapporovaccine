@@ -66,7 +66,7 @@ $.getJSON("data/vaccine.json", function(data){ vaccines = data; });
 $.numbersToVaccines = function(numbers) {
 	result = [];
 	numbers.split(':').forEach(function(number){
-		result.push( vaccines.find((vaccine)=>{return vaccine.id === number}).name );
+		result.push( vaccines.find((vaccine)=>{return (vaccine.id === number);}).name );
 	});
 	return result.join(',');
 }
