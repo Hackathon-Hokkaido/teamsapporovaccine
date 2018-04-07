@@ -29,7 +29,7 @@
 
 </head>
 <body bgcolor="#ffffec">
-<h1> 札幌市ワクチン接種うんたら</h1>
+<h1> 札幌市予防net</h1>
 <h5> JRの最寄り駅検索の場合はこちら</h5>
 <select id="seljr"></select>
 <button id="getnear">JR駅の近くでリスト表示</button>&nbsp;&nbsp;<br/>
@@ -119,6 +119,7 @@ function getNearestMarkers( targets, count, currentLocation ) {
  var grid;
  var columns = [
     {id: "Name", name: "医療施設名", field: "医療施設名", width: 300 },
+    {id: "ku", name: "区", field: "区", width: 50 },
     {id: "address", name: "住所", field: "住所", width: 300 },
     {id: "address2", name: "建物", field: "建物", width: 300 },
     {id: "phone", name: "電話番号", field: "電話番号", width: 70 },
@@ -149,10 +150,11 @@ function getNearestMarkers( targets, count, currentLocation ) {
   geojsons.forEach(function(gj){
     data.push({
         "医療施設名": gj.properties.Name,
+        "区": gj.properties.ku,
         "住所": gj.properties.address,
         "建物": gj.properties.address2,
         "電話番号": gj.properties.phone,
-        "ワクチン": gj.properties.vaccine,
+        "ワクチン名": gj.properties.vaccine,
         //"年齢下限": gj.properties.vac_minage,
         //"年齢上限": gj.properties.vac_maxage,
         //"メモ": gj.properties.memo
