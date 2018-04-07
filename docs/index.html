@@ -210,6 +210,8 @@ $('#curnear').click(function(){
   }
 });
 
+$.orderByPos(43.068612,141.350768);
+
 (function() {
  var JR = [
  { 'JR 駅名（番号）から近い順に病院を並替':[141.350768,43.068612] },
@@ -300,7 +302,6 @@ $('#curnear').click(function(){
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
  });
- $.orderByPos(43.068612,141.350768);
 }());
 
 //alert('hoge');
