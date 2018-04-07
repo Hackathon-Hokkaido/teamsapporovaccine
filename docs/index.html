@@ -210,6 +210,7 @@ $('#curnear').click(function(){
 	  alert('現在地を取得できない設定になっています');
   }
 });
+$(window).on('load',function(){$.orderByPos(43.06637,141.350299);});
 
 (function() {
  var JR = [
@@ -301,7 +302,6 @@ $('#curnear').click(function(){
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
  });
- $.orderByPos(43.06637,141.350299);
 }());
 
 //alert('hoge');
