@@ -63,7 +63,7 @@ iconName.forEach(function (png) {
 });
 var vaccines;
 $.getJSON("data/vaccine.json", function(data){ vaccines = data; });
-$.numberToVactines = function(numbers) {
+$.numbersToVaccines = function(numbers) {
 	result = [];
 	numbers.split(':').each(function(number){
 		result.push( vaccines[number-1].name );
@@ -160,7 +160,7 @@ function getNearestMarkers( targets, count, currentLocation ) {
         "住所": gj.properties.address,
         "建物": gj.properties.address2,
         "電話番号": gj.properties.phone,
-        "ワクチン名": $.numberToVaccine(gj.properties.vaccine),
+        "ワクチン名": $.numbersToVaccines(gj.properties.vaccine),
         //"年齢下限": gj.properties.vac_minage,
         //"年齢上限": gj.properties.vac_maxage,
         //"メモ": gj.properties.memo
