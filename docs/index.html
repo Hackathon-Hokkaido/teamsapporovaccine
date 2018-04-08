@@ -21,7 +21,8 @@
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 <script src="SlickGrid-master/slick.core.js"></script>
 <script src="SlickGrid-master/slick.grid.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/locale/ja.js"></script>
 <style>
   body {padding: 0; margin: 0}
   html, body, #map {height: 80%; width: 100%;}
@@ -31,6 +32,8 @@
 </head>
 <body bgcolor="#ffffec">
 <h1> 札幌市予防net</h1>
+<label for='date'>予防接種する方の生年月日</label><input type='date' id='date' />
+<button id='birth'>生年月日から予防接種を選別</button>
 <div id="vacchks" lang="ja" style="line-break: strict"></div>
 <select id="seljr"></select>
 <select id="selun"></select>
@@ -72,7 +75,22 @@ $.numbersToVaccines = function(numbers) {
 	});
 	return result.join(',');
 }
-
+$('#birth').click(function(){
+	if( !$('#date').val() ) { alert( '生年月日を入力してください'); return; }
+	nowdate = moment();
+	birthdate = moment($('#date').val());
+	duration = moment.duration(nowdate.diff(birthdate));
+	vaccines.forEach(function(vaccine){
+		start_duration = moment.duration(vaccine.min_age,'y').add(vaccine.min_month,'M');
+		end_duration = moment.duration(vaccine.max_age,'y').add(vaccine.max_month,'M');
+		checked = false;
+		if( start_duration <= duration && duration <= end_duration ) {
+			checked = true;
+		}
+		$('#chk_' + vaccine.id).prop('checked', checked);
+	});
+	//alert('' + duration.years() + '年' + duration.months() + 'ヶ月');
+});
 var hospitals = [];
 var sapporoLayer = 
 omnivore.csv(
@@ -107,9 +125,7 @@ map.setView([43.063882, 141.345534], 13);
 	*/
 function getNearestMarkers( targets, count, currentLocation ) {
 	result = [];
-	targets.forEach(function(marker){
-		result.push(marker);
-	});
+	targets.forEach(function(marker){ result.push(marker); });
 	result.sort(function(a,b){
 		bg = b.geometry;
 		bll = L.latLng( bg.coordinates[1], bg.coordinates[0] );
@@ -223,7 +239,7 @@ $('#curnear').click(function(){
 $(window).on('load',function(){
 	$.orderByPos(43.06637,141.350299);
  vaccines.forEach(function(vaccine) {
-   $("#vacchks").append ( "<span><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></span>&nbsp;&nbsp;" );
+   $("#vacchks").append ( "<span><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></span>&nbsp;&nbsp;" );
  });
 });
 
