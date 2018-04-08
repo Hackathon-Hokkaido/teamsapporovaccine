@@ -71,7 +71,7 @@ $.numbersToVaccines = function(numbers) {
 	});
 	return result.join(',');
 }
-vaccines.eachEach(function(vaccine) {
+vaccines.forEach(function(vaccine) {
   $("#vacchks").append ( "<label for='chk_" + vaccine.id + "'>" + vaccine.name + "</label><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' />" );
 });
 
