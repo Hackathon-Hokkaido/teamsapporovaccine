@@ -172,6 +172,7 @@ function getNearestMarkers( targets, count, currentLocation ) {
  function makeGrid( geojsons ) {
   var data = [];
   geojsons.forEach(function(gj){
+	  
     data.push({
         "医療施設名": gj.properties.Name,
         "区": gj.properties.ku,
