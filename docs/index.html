@@ -207,14 +207,14 @@ function getNearestMarkers( targets, count, currentLocation, filterVaccines ) {
  }
 
 $.orderByPos = function(lat,lon) {
-	cpos = L.latLng(lat, lon);
+	$.last_location = L.latLng(lat, lon);
 	filterVaccines = [];
 	$('input[name="vacchk"]').each(function(i,ctl){
 		if( $(ctl).prop('checked') )  filterVaccines.push( $(ctl).val() );
 	});
-	near = getNearestMarkers( hospitals, 0,  cpos, filterVaccines );
+	near = getNearestMarkers( hospitals, 0,  $.last_location, filterVaccines );
   makeGrid(near, filterVaccines);
-	setCurrentPosition(cpos);
+	setCurrentPosition($.last_location);
 }
 
 $('#seljr').change(function(){
@@ -254,8 +254,13 @@ $('#curnear').click(function(){
   }
 });
 $(window).on('load',function(){
+	isFirefox = (window.navigator.userAgent.toLowerCase().indexOf('firefox') != -1);
+	i = 0;
   vaccines.forEach(function(vaccine) {
+	  ++i;
    $("#vacchks").append ( "<span><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></span>&nbsp;&nbsp;" );
+   if( i == 3 && isFirefox ) $("#vacchks").append( "<br />" );
+   i = i % 3;
   });
 	$.orderByPos(43.06637,141.350299);
 });
