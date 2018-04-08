@@ -219,7 +219,12 @@ $('#curnear').click(function(){
 	  alert('現在地を取得できない設定になっています');
   }
 });
-$(window).on('load',function(){$.orderByPos(43.06637,141.350299);});
+$(window).on('load',function(){
+	$.orderByPos(43.06637,141.350299);
+ vaccines.forEach(function(vaccine) {
+   $("#vacchks").append ( "<input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "</label>" );
+ });
+});
 
 (function() {
  var JR = [
@@ -310,9 +315,6 @@ $(window).on('load',function(){$.orderByPos(43.06637,141.350299);});
    for(var key in this) {
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
- });
- vaccines.forEach(function(vaccine) {
-   $("#vacchks").append ( "<label for='chk_" + vaccine.id + "'>" + vaccine.name + "</label><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' />" );
  });
 }());
 
