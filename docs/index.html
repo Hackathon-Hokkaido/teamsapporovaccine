@@ -311,6 +311,11 @@ $(window).on('load',function(){$.orderByPos(43.06637,141.350299);});
 	   $("#selun").append($("<option>").val(this[key]).text(key));
 	 }
  });
+ $.each(vaccines,function() {
+	 for(var vaccine in this) {
+		 $('#vacchks').append($('<input/>').attr({type:'checkbox',name:vaccine.name}));
+	 }
+ });
 }());
 
 //alert('hoge');
