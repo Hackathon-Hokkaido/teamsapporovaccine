@@ -25,15 +25,16 @@
 <style>
   body {padding: 0; margin: 0}
   html, body, #map {height: 80%; width: 100%;}
+  span { white-space: nowrap; } 
 </style>
 
 </head>
 <body bgcolor="#ffffec">
 <h1> 札幌市予防net</h1>
+<div id="vacchks" lang="ja" style="line-break: strict"></div>
 <select id="seljr"></select>
 <select id="selun"></select>
 <button id="curnear">現在地から近い順に病院を並替</button><br/><br/>
-<div id="vacchks"></div>
 <h2>ワクチンを接種できる医療機関リスト</h2>
 <h4>↓↓↓リスト上をクリックすると該当施設がわかり、アイコンをクリックすると詳しい情報を見ることができます。↓↓↓</h4>
 <div id="list" style="width:100%;height:200px;"></div>
@@ -222,7 +223,7 @@ $('#curnear').click(function(){
 $(window).on('load',function(){
 	$.orderByPos(43.06637,141.350299);
  vaccines.forEach(function(vaccine) {
-   $("#vacchks").append ( "<input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "</label>" );
+   $("#vacchks").append ( "<span><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></span>&nbsp;&nbsp;" );
  });
 });
 
