@@ -313,8 +313,8 @@ $(window).on('load',function(){$.orderByPos(43.06637,141.350299);});
  });
  $.each(vaccines,function() {
 	 for(var vaccine in this) {
-		 var $ctrl = $('<input/>').attr({type:'checkbox',name:vaccine.name}); 
-		 $('#vacchks').append($ctrl);
+     $("#vacchks").append ( "<label for='chk_" + vaccine.id + "'>" + vaccine.name + "</label><input id='chk_" + vaccine.id + "' type='checkbox' value='" + vaccine.id + "' />" );
+
 	 }
  });
 }());
