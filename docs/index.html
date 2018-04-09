@@ -88,8 +88,9 @@ $('#birth').click(function(){
 		if( start_duration <= duration && duration <= end_duration ) {
 			checked = true;
 		}
-		$('#chk_' + vaccine.id).prop('checked', checked);
+		$('#chk_' + vaccine.id).prop('checked', checked).click(function(){ $.orderByPos($.last_lat, $.last_lon)});
 		$.cookie('birth', birthdate.format('YYYY-MM-DD'), { expires: 1024 });
+		$.orderByPos($.last_lat,$.last_lon);
 	});
 	//alert('' + duration.years() + '年' + duration.months() + 'ヶ月');
 });
@@ -268,18 +269,18 @@ $(window).on('load',function(){
    if( i == 3 && isFirefox ) $("#vacchks").append( "<br />" );
    i = i % 3;
   });
-  last_lon = $.cookie('last_lon');
-  last_lat = $.cookie('last_lat');
-  if( !last_lon || !last_lat ) {
-	  last_lon = 141.350299;
-	  last_lat = 43.06637;
+  $.last_lon = $.cookie('last_lon');
+  $.last_lat = $.cookie('last_lat');
+  if( !$.last_lon || !$.last_lat ) {
+	  $.last_lon = 141.350299;
+	  $.last_lat = 43.06637;
   }
   last_date = $.cookie('birth');
   if( last_date ) {
 	  $('#date').val( last_date );
 	  $('#birth').click();
   }
-	$.orderByPos(last_lat,last_lon);
+	$.orderByPos($.last_lat,$.last_lon);
 });
 
 (function() {
