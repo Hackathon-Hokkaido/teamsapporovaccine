@@ -299,7 +299,7 @@ $('#curnear').click(function(){
 });
 $(window).on('load',function(){
   vaccines.forEach(function(vaccine) {
-   $("#vacchks").append ( "<li style='display: inline-block;'><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></li>&nbsp;&nbsp;" );
+   $("#vacchks").append ( "<li style='display: inline-block;margin-right:2em;'><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></li>" );
   });
   $.last_lon = $.cookie('last_lon');
   $.last_lat = $.cookie('last_lat');
