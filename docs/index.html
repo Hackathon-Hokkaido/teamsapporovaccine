@@ -67,6 +67,12 @@ iconName.forEach(function (png) {
 	}))
 });
 var vaccines;
+$.ajax({ // MS Edge kutabare.
+  url: "data/vaccine.json",
+  dataType: 'json',
+  contentType:"application/json; charset=utf-8",
+  success: function(data){ vaccines = data; },
+});
 $.getJSON("data/vaccine.json", function(data){ vaccines = data; });
 $.numbersToVaccines = function(numbers) {
 	result = [];
