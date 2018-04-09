@@ -35,7 +35,7 @@
 <h1> 札幌市予防net</h1>
 <label for='date'>予防接種する方の生年月日</label><input type='date' id='date' />
 <button id='birth'>生年月日から予防接種を選別</button>
-<div id="vacchks" lang="ja" style="line-break: strict; width:100%;"></div>
+<ul id="vacchks" lang="ja" style="line-break: strict; width:100%;"></ul>
 <select id="seljr"></select>
 <select id="selun"></select>
 <button id="curnear">現在地から近い順に病院を並替</button><br/><br/>
@@ -298,13 +298,8 @@ $('#curnear').click(function(){
   }
 });
 $(window).on('load',function(){
-	isFirefox = (window.navigator.userAgent.toLowerCase().indexOf('firefox') != -1);
-	i = 0;
   vaccines.forEach(function(vaccine) {
-	  ++i;
-   $("#vacchks").append ( "<span><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></span>&nbsp;&nbsp;" );
-   if( i == 3 && isFirefox ) $("#vacchks").append( "<br />" );
-   i = i % 3;
+   $("#vacchks").append ( "<li style='display: inline-block;'><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></li>&nbsp;&nbsp;" );
   });
   $.last_lon = $.cookie('last_lon');
   $.last_lat = $.cookie('last_lat');
