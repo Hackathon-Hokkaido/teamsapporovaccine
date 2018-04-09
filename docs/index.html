@@ -95,10 +95,20 @@ $.ajax({
   contentType: "Application/json; charset=utf-8",
   success: function(data){ vaccines = data; },
 });
+function bsearchVaccine(Arr,value){ // IE kutabare
+  var low  = 0 , high = Arr.length -1 ,mid;      
+  while (low <= high){
+    mid = (low+high)>>1;     
+    if(Arr[mid].id ===value) return Arr[mid]; 
+    else if (parseInt(Arr[mid].id) <parseInt(value)) low = mid+1;
+    else high = mid-1;          
+  }
+  return undefined;
+}
 $.numbersToVaccines = function(numbers) {
 	result = [];
 	numbers.forEach(function(number){
-		vac = vaccines.find((vaccine)=>{return (vaccine.id === number);});
+		vac = bsearchVaccine(vaccines, number);
 		if(vac) result.push( vac.name );
 	});
 	return result.join(',');
