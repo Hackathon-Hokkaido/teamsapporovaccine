@@ -16,6 +16,7 @@
 <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 <script src="jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
 <script src="jquery.event.drop-2.2/jquery.event.drop-2.2.js"></script>
+<script src="jquery.cookie/jquery.cookie.js"></script>
 <!--<script src="//cdn.leafletjs.com/leaflet-1.3.1/leaflet.js"></script>-->
 <script src="leaflet/leaflet.js"></script>
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
@@ -88,6 +89,7 @@ $('#birth').click(function(){
 			checked = true;
 		}
 		$('#chk_' + vaccine.id).prop('checked', checked);
+		$.cookie('birth', birthdate.format('YYYY-MM-DD'), { expires: 1024 });
 	});
 	//alert('' + duration.years() + '年' + duration.months() + 'ヶ月');
 });
@@ -207,6 +209,8 @@ function getNearestMarkers( targets, count, currentLocation, filterVaccines ) {
  }
 
 $.orderByPos = function(lat,lon) {
+	$.last_lon = lon;
+	$.last_lat = lat;
 	$.last_location = L.latLng(lat, lon);
 	filterVaccines = [];
 	$('input[name="vacchk"]').each(function(i,ctl){
@@ -215,6 +219,8 @@ $.orderByPos = function(lat,lon) {
 	near = getNearestMarkers( hospitals, 0,  $.last_location, filterVaccines );
   makeGrid(near, filterVaccines);
 	setCurrentPosition($.last_location);
+	$.cookie('last_lat', lat, { expires: 1024 });
+	$.cookie('last_lon', lon, { expires: 1024 });
 }
 
 $('#seljr').change(function(){
@@ -262,7 +268,18 @@ $(window).on('load',function(){
    if( i == 3 && isFirefox ) $("#vacchks").append( "<br />" );
    i = i % 3;
   });
-	$.orderByPos(43.06637,141.350299);
+  last_lon = $.cookie('last_lon');
+  last_lat = $.cookie('last_lat');
+  if( !last_lon || !last_lat ) {
+	  last_lon = 141.350299;
+	  last_lat = 43.06637;
+  }
+  last_date = $.cookie('birth');
+  if( last_date ) {
+	  $('#date').val( last_date );
+	  $('#birth').click();
+  }
+	$.orderByPos(last_lat,last_lon);
 });
 
 (function() {
