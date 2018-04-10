@@ -67,40 +67,42 @@ iconName.forEach(function (png) {
 	}))
 });
 var vaccines = [];
-/*
 $.ajax({ // MS Edge kutabare.
   url: "data/vaccine.csv",
-  dataType: 'txt',
+  dataType: 'text',
   contentType:"text/plain; charset=utf-8",
   success: function(data){
-	  lines = data.split('¥n');
+	  lines = data.split("\n");
 	  lines.forEach(function(line){
 		  vals = line.split(',');
+		  if( vals.length >= 7 ) {
 		  vaccine = new Object();
-		  vaccine.id = vals[0];
+		  vaccine.id = parseInt(vals[0]);
 		  vaccine.name = vals[1];
 		  vaccine.description = vals[2];
-		  vaccine.min_age = vals[3];
-		  vaccine.min_month = vals[4];
-		  vaccine.max_age = vals[5];
-		  vaccine.max_month = vals[6];
-		  vaccines.push( vaccine ); 
+		  vaccine.min_age = parseInt(vals[3]);
+		  vaccine.min_month = parseInt(vals[4]);
+		  vaccine.max_age = parseInt(vals[5]);
+		  vaccine.max_month = parseInt(vals[6]);
+		  vaccines.push( vaccine );
+		  }
 		}); 
 	},
 });
-*/
+/*
 $.ajax({
   url:"data/vaccine.json",
   dataType: 'json',
   contentType: "Application/json; charset=utf-8",
   success: function(data){ vaccines = data; },
 });
+*/
 function bsearchVaccine(Arr,value){ // IE kutabare
   var low  = 0 , high = Arr.length -1 ,mid;      
   while (low <= high){
     mid = (low+high)>>1;     
-    if(Arr[mid].id ===value) return Arr[mid]; 
-    else if (parseInt(Arr[mid].id) <parseInt(value)) low = mid+1;
+    if(Arr[mid].id == value) return Arr[mid]; 
+    else if (Arr[mid].id < value) low = mid+1;
     else high = mid-1;          
   }
   return undefined;
@@ -142,15 +144,15 @@ omnivore.csv(
 	  marker.setIcon(hospitalIcons[0]);
     // Bind a popup to each icon based on the same properties
     gj = marker.toGeoJSON();
-    gj.properties.vaccineArray = gj.properties.vaccine.split(':');
+    tempArray = gj.properties.vaccine.split(':');
+    gj.properties.vaccineArray = [];
+    tempArray.forEach(function (val) { gj.properties.vaccineArray.push( parseInt(val) )});
     marker.bindPopup(
       //"<a href='#' target='_blank'>" + gj.properties.Name + "</a>"
       "病院名 : " + gj.properties.Name
       + "<br />住所 : " + gj.properties.address 
       + "<br />電話 : " + gj.properties.phone
       + "<br />ワクチン名 : " + $.numbersToVaccines(gj.properties.vaccineArray)
-      //+ "<br />対象年齢 " + gj.properties.vac_minage + " - " + gj.properties.vac_maxage 
-      //+ "<br />メモ : " + gj.properties.memo
     );
     });
   })
@@ -169,13 +171,6 @@ function getNearestMarkers( targets, count, currentLocation, filterVaccines ) {
 	targets.forEach(function(marker){ 
 		toPush = false;
 		$(marker.properties.vaccineArray).filter(filterVaccines).each(function(){ toPush = true; });
-		/*
-		 .forEach(function(number) {
-			filterVaccines.forEach(function(target){
-				toPush = (target === number);
-			});
-		});
-		*/
 		if( toPush )  result.push(marker); 
 	});
 	result.sort(function(a,b){
@@ -200,9 +195,6 @@ function getNearestMarkers( targets, count, currentLocation, filterVaccines ) {
     {id: "address", name: "住所", field: "住所", width: 300 },
     {id: "address2", name: "建物", field: "建物", width: 300 },
     {id: "ku", name: "区", field: "区", width: 80 },
-    //{id: "vac_minage", name: "年齢下限", field: "年齢下限", width: 70 },
-    //{id: "vac_maxage", name: "年齢上限", field: "年齢上限", width: 70 },
-    //{id: "memo", name: "メモ", field: "メモ", width: 70 }
   ];
   var options = {
     enableCellNavigation: true,
@@ -232,9 +224,6 @@ function getNearestMarkers( targets, count, currentLocation, filterVaccines ) {
         "建物": gj.properties.address2,
         "電話番号": gj.properties.phone,
         "ワクチン名": $.numbersToVaccines($(gj.properties.vaccineArray).filter(filterVaccines).toArray()),
-        //"年齢下限": gj.properties.vac_minage,
-        //"年齢上限": gj.properties.vac_maxage,
-        //"メモ": gj.properties.memo
     });
   });
   grid = new Slick.Grid("#list", data, columns, options);
@@ -252,7 +241,7 @@ $.orderByPos = function(lat,lon) {
 	$.last_location = L.latLng(lat, lon);
 	filterVaccines = [];
 	$('input[name="vacchk"]').each(function(i,ctl){
-		if( $(ctl).prop('checked') )  filterVaccines.push( $(ctl).val() );
+		if( $(ctl).prop('checked') )  filterVaccines.push( parseInt($(ctl).val()) );
 	});
 	near = getNearestMarkers( hospitals, 0,  $.last_location, filterVaccines );
   makeGrid(near, filterVaccines);
