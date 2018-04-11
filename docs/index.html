@@ -66,6 +66,7 @@ iconName.forEach(function (png) {
     popupAnchor: [0, 0]
 	}))
 });
+$.processed = false;
 var vaccines = [];
 $.ajax({ // MS Edge kutabare.
   url: "data/vaccine.csv",
@@ -76,16 +77,19 @@ $.ajax({ // MS Edge kutabare.
 	  lines.forEach(function(line){
 		  vals = line.split(',');
 		  if( vals.length >= 7 ) {
-		  vaccine = new Object();
-		  vaccine.id = parseInt(vals[0]);
-		  vaccine.name = vals[1];
-		  vaccine.description = vals[2];
-		  vaccine.min_age = parseInt(vals[3]);
-		  vaccine.min_month = parseInt(vals[4]);
-		  vaccine.max_age = parseInt(vals[5]);
-		  vaccine.max_month = parseInt(vals[6]);
-		  vaccines.push( vaccine );
+		    vaccine = new Object();
+		    vaccine.id = parseInt(vals[0]);
+		    vaccine.name = vals[1];
+		    vaccine.description = vals[2];
+		    vaccine.min_age = parseInt(vals[3]);
+		    vaccine.min_month = parseInt(vals[4]);
+		    vaccine.max_age = parseInt(vals[5]);
+		    vaccine.max_month = parseInt(vals[6]);
+		    vaccines.push( vaccine );
 		  }
+		  if( $.processed ) {
+  		  $.generateCheckboxes();
+  		}
 		}); 
 	},
 });
@@ -286,10 +290,14 @@ $('#curnear').click(function(){
 	  alert('現在地を取得できない設定になっています');
   }
 });
-$(window).on('load',function(){
+$.generateCheckboxes = function() {
   vaccines.forEach(function(vaccine) {
    $("#vacchks").append ( "<li style='display: inline-block;margin-right:2em;'><input id='chk_" + vaccine.id + "' type='checkbox' name='vacchk' value='" + vaccine.id + "' checked='checked' /><label for='chk_" + vaccine.id + "'>" + vaccine.name + "(" + vaccine.description + ")" + "</label></li>" );
   });
+  $.processed = true;
+}
+$(window).on('load',function(){
+	$.generateCheckboxes(); // for MS Edge hack.
   $.last_lon = $.cookie('last_lon');
   $.last_lat = $.cookie('last_lat');
   if( !$.last_lon || !$.last_lat ) {
