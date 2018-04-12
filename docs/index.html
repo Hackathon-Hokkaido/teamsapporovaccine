@@ -34,6 +34,9 @@
         display: block;
         font-weight: 700;        
     }
+    #vacchks .lastChecked {
+        display: block !important;
+    }
     .lastChecked + li:before {
         content: 'その他の予防接種';
         display: block;
@@ -152,9 +155,10 @@ $('#birth').click(function(){
             list.sort(function(a,b) {
                 return Number($(a).children('input')[0].checked) < Number($(b).children('input')[0].checked) ? 1 : -1;
             });
-            $('#vacchks').html(list);
             var lc ='lastChecked';
-            var checked = $('#vacchks input:checked').removeClass(lc);
+            list.removeClass(lc)
+            $('#vacchks').html(list);
+            var checked = $('#vacchks input:checked');
             $(checked[checked.length-1]).parent().addClass(lc);
         })();
 	});
