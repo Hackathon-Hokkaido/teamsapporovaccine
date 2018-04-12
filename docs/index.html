@@ -103,9 +103,7 @@ $.ajax({ // MS Edge kutabare.
 		    vaccine.max_month = parseInt(vals[6]);
 		    vaccines.push( vaccine );
 		  }
-		  if( $.processed ) {
-  		  $.generateCheckboxes();
-  		}
+		  $.generateCheckboxes();
 		}); 
 	},
 });
