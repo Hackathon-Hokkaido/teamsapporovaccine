@@ -28,6 +28,18 @@
   body {padding: 0; margin: 0}
   html, body, #map {height: 80%; width: 100%;}
   span { white-space: nowrap; } 
+  #date,button,select,option { box-sizing: border-box; font-size: 16px; line-height: 26px; height: 26px; padding: 0 8px;margin: 0; border: 1px solid #666;}
+    #vacchks li:first-child:before {
+        content: '現時点で受けられる接種の一覧';
+        display: block;
+        font-weight: 700;        
+    }
+    .lastChecked + li:before {
+        content: 'その他の予防接種';
+        display: block;
+        font-weight: 700;
+        padding-top: 12px;
+    }
 </style>
 
 </head>
@@ -124,6 +136,7 @@ $('#birth').click(function(){
 	nowdate = moment();
 	birthdate = moment($('#date').val());
 	duration = moment.duration(nowdate.diff(birthdate));
+    var response = 0;
 	vaccines.forEach(function(vaccine){
 		start_duration = moment.duration(vaccine.min_age,'y').add(vaccine.min_month,'M');
 		end_duration = moment.duration(vaccine.max_age,'y').add(vaccine.max_month,'M');
@@ -131,9 +144,19 @@ $('#birth').click(function(){
 		if( start_duration <= duration && duration <= end_duration ) {
 			checked = true;
 		}
-		$('#chk_' + vaccine.id).prop('checked', checked).click(function(){ $.orderByPos($.last_lat, $.last_lon)});
+		response += $('#chk_' + vaccine.id).prop('checked', checked).click(function(){ $.orderByPos($.last_lat, $.last_lon)}).length;
 		$.cookie('birth', birthdate.format('YYYY-MM-DD'), { expires: 1024 });
 		$.orderByPos($.last_lat,$.last_lon);
+        (vaccines.length == response) && (function() {
+            var list = $('#vacchks li');
+            list.sort(function(a,b) {
+                return Number($(a).children('input')[0].checked) < Number($(b).children('input')[0].checked) ? 1 : -1;
+            });
+            $('#vacchks').html(list);
+            var lc ='lastChecked';
+            var checked = $('#vacchks input:checked').removeClass(lc);
+            $(checked[checked.length-1]).parent().addClass(lc);
+        })();
 	});
 	//alert('' + duration.years() + '年' + duration.months() + 'ヶ月');
 });
